@@ -1,2 +1,9 @@
 secrets
 env
+templates
+
+!secrets/.gitkeep
+!templates/.gitkeep
+
+
+
