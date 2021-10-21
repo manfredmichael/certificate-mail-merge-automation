@@ -4,17 +4,18 @@ import os
 import pdf2image 
 
 class Generator:
-    def __init__(self, template_filepath, font='OpenSans-SemiBold.ttf', font_size=60, output='certificates'):
+    def __init__(self, template_filepath, font='OpenSans-SemiBold.ttf', font_size=72, output='certificates'):
         # create output dir
         if not os.path.isdir(output):
             os.makedirs(output)
 
         # convert pdf template to jpg
-        if template_filepath.split('.')[-1] == 'pdf' and not os.path.isfile(template_filepath[:-4] + '.png'):
-            img = pdf2image.convert_from_path(template_filepath)[0]
-
-            template_filepath = template_filepath[:-4] + '.png'
-            img.save(template_filepath)
+        if template_filepath.split('.')[-1] == 'pdf':
+            png_filepath = template_filepath[:-4] + '.png'
+            if not os.path.isfile(png_filepath):
+                img = pdf2image.convert_from_path(template_filepath)[0]
+                img.save(png_filepath)
+            template_filepath = png_filepath
 
         self.font = ImageFont.truetype(font, font_size)
         self.template = template_filepath
@@ -22,13 +23,21 @@ class Generator:
 
 
     def generate(self, name, certificate_code):
+        name = name.upper()
+
         certificate = Image.open(self.template)
         draw = ImageDraw.Draw(certificate)
-        draw.text(xy=(725,760), 
-                  text='{}'.format(name),
-                  fill=(0,0,0),
+
+        # write name 
+        W, H = certificate.size
+        w, h = self.font.getsize(name)
+        draw.text(xy=((W-w)/2, 435), 
+                  text=name,
+                  fill='black',
                   font=self.font)
 
+        # save as pdf
         filename = name + '.pdf'
         filepath = os.path.join(self.output, filename)
         certificate.save(filepath) 
+
