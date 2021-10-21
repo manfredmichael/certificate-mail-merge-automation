@@ -1,16 +1,25 @@
 from PIL import Image, ImageDraw, ImageFont
 import pandas as pd
 import os
+import pdf2image 
 
+class Generator:
+    def __init__(self, template_filepath, font='OpenSans-SemiBold.ttf', font_size=60, output='certificates'):
+        # create output dir
+        if not os.path.isdir(output):
+            os.makedirs(output)
 
-class CertificateGenerator:
-    def __init__(self, template_filepath, font_style='arial.ttf', font_size=60, output='certificates'):
-        self.font = ImageFont.truetype(font_style, font_size)
+        # convert pdf template to jpg
+        if template_filepath.split('.')[-1] == 'pdf' and not os.path.isfile(template_filepath[:-4] + '.png'):
+            img = pdf2image.convert_from_path(template_filepath)[0]
+
+            template_filepath = template_filepath[:-4] + '.png'
+            img.save(template_filepath)
+
+        self.font = ImageFont.truetype(font, font_size)
         self.template = template_filepath
         self.output = output
 
-        if not os.path.isdir(output):
-            os.makedirs(output)
 
     def generate(self, name, certificate_code):
         certificate = Image.open(self.template)
