@@ -1,6 +1,6 @@
 import certificate_generator 
 
-FONT = 'NotoSans-SemiCondensedSemiBold.ttf'
+FONT = 'OpenSans-SemiBold.ttf'
 
 generator ={
     'COMITTEE':certificate_generator.Generator("templates/CERTIFICATE OF COMITTEE.pdf", font=FONT),

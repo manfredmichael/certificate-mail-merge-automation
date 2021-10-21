@@ -40,7 +40,7 @@ class Generator:
         draw.rounded_rectangle((50, 250, 330, 310), 
                 fill="#65b5f5",
                 width=3, radius=20)
-        draw.text(xy=(85, 256), 
+        draw.text(xy=(78, 256), 
                   text=code,
                   fill='white',
                   font=self.font_code)
