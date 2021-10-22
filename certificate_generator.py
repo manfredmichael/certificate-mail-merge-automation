@@ -5,7 +5,7 @@ import pdf2image
 import qrcode
 
 class Generator:
-    def __init__(self, template_filepath, font='OpenSans-SemiBold.ttf', name_size=72, code_size=32, output='certificates'):
+    def __init__(self, template_filepath, font='OpenSans-SemiBold.ttf', name_size=72, code_size=30, output='certificates'):
         # create output dir
         if not os.path.isdir(output):
             os.makedirs(output)
@@ -23,7 +23,6 @@ class Generator:
         self.template = template_filepath
         self.output = output
 
-
     def generate(self, name, code):
         name = name.upper()
 
@@ -37,10 +36,10 @@ class Generator:
 
         # write certificate code
         draw = ImageDraw.Draw(certificate)
-        draw.rounded_rectangle((50, 250, 330, 310), 
+        draw.rounded_rectangle((50, 250, 343, 310), 
                 fill="#65b5f5",
                 width=3, radius=20)
-        draw.text(xy=(78, 256), 
+        draw.text(xy=(73, 258), 
                   text=code,
                   fill='white',
                   font=self.font_code)
