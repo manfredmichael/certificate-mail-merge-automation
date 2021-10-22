@@ -1,6 +1,8 @@
 import certificate_generator 
 from google_api_module import GoogleAPI
+import pandas as pd
 
+CERTIFICATE_CODE = 'IFSN[DATE][MONTH][YEAR][TYPE][NO]'
 FONT = 'OpenSans-SemiBold.ttf'
 
 generator ={
@@ -17,8 +19,13 @@ api.load_services('secrets/client_secret.json')
 
 
 def main():
+    # filter attendees who filled both forms
     registration = api.get_responses('data bervy')
-    print(registration)
+    feedback = api.get_responses('feedback')
+    filtered_response = feedback.merge(registration, 
+                                       left_on='Email address',
+                                       right_on='confirm your email')
+    print(filtered_response)
     
 
 
