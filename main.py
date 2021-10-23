@@ -35,7 +35,7 @@ def main():
         state = json.load(f)
 
     with open(EMAIL_TEMPLATE_PATH, 'r') as f:
-        email_template = f.read()
+        email_template = '\n'.join(f.readlines())
 
     registration = api.get_responses('data bervy')
     feedback = api.get_responses('feedback')
