@@ -5,8 +5,12 @@ import utils
 import os
 import json
 
+EMAIL_TEMPLATE_PATH = 'data/email.txt'
+EMAIL_SUBJECT = 'GDSC UG INFO SESSION 2021 CERTIFICATE'
+
 CERTIFICATE_CODE = 'IFSN[DATE][MONTH][YEAR][TYPE][NO]'
-CERT_TYPE = 'PT'
+CERT_TYPE_CODE = 'PT'
+CERT_TYPE = 'Participation'
 FONT = 'OpenSans-SemiBold.ttf'
 
 generator ={
@@ -30,6 +34,9 @@ def main():
     with open('data/state.json','r') as f:
         state = json.load(f)
 
+    with open(EMAIL_TEMPLATE_PATH, 'r') as f:
+        email_template = f.read()
+
     registration = api.get_responses('data bervy')
     feedback = api.get_responses('feedback')
 
@@ -51,7 +58,7 @@ def main():
         i = state['CURRENT_CERT_NO']
 
         code = utils.create_code(date_time=record['Timestamp'], 
-                                 cert_type=CERT_TYPE,
+                                 cert_type=CERT_TYPE_CODE,
                                  cert_no=i+1,
                                  base=CERTIFICATE_CODE)
         certificate_path = generator['PARTICIPANT'].generate(name, 
@@ -60,15 +67,24 @@ def main():
         certificate_url = api.upload_certificate(certificate_path)
         api.add_certificate_log(code=code, 
                                 name=name,
-                                cert_type='Participation',
+                                cert_type=CERT_TYPE,
                                 valid_until='Forever',
                                 url=certificate_url,
                                 worksheet='sertifikat web')
-        print(certificate_url)
-        print(certificate_path)
-        print(name)
 
-        state['EMAIL_SENT'].append(record['Email address'])
+
+        # writing email
+        print('Sending to {}'.format(name))
+        try:
+            message_text = email_template.replace('[NAME]', name)
+            api.send_certificate(email=email,
+                                 subject=EMAIL_SUBJECT,
+                                 message_text=message_text,
+                                 certificate_path=certificate_path)
+            state['EMAIL_SENT'].append(email)
+        except Exception as e:
+            print('An error occurred: {}'.format(e))
+
 
     with open('data/state.json','w') as f:
         f.write(json.dumps(state, indent=2))
