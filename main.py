@@ -34,7 +34,8 @@ def main():
         code = create_code(record['Timestamp'], 'PT',i+1)
         name = record['Name']
         certificate_path = generator['PARTICIPANT'].generate(name, code, qr_logo='imgs/dsc_mask.png')
-        api.upload_certificate(certificate_path)
+        certificate_url = api.upload_certificate(certificate_path)
+        print(certificate_url)
         print(certificate_path)
         print(name)
 
