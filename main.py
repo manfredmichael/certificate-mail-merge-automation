@@ -2,6 +2,8 @@ import certificate_generator
 from google_api_module import GoogleAPI
 import pandas as pd
 import utils
+import os
+import json
 
 CERTIFICATE_CODE = 'IFSN[DATE][MONTH][YEAR][TYPE][NO]'
 CERT_TYPE = 'PT'
@@ -21,6 +23,13 @@ api.load_services('secrets/client_secret.json')
 
 
 def main():
+    if not os.path.isfile('data/state.json'):
+        with open('data/state.json','w') as f:
+            f.write(json.dumps({'EMAIL_SENT':[], 'CURRENT_CERT_NO':0}, indent=2))
+
+    with open('data/state.json','r') as f:
+        state = json.load(f)
+
     registration = api.get_responses('data bervy')
     feedback = api.get_responses('feedback')
 
@@ -31,8 +40,16 @@ def main():
     filtered_response['Timestamp'] = pd.to_datetime(filtered_response['Timestamp'])
 
 
+
     for i, record in filtered_response.head(1).iterrows():
+        email = record['Email address']
         name = record['Name']
+        if email in state['EMAIL_SENT']:
+            continue
+
+        state['CURRENT_CERT_NO'] += 1
+        i = state['CURRENT_CERT_NO']
+
         code = utils.create_code(date_time=record['Timestamp'], 
                                  cert_type=CERT_TYPE,
                                  cert_no=i+1,
@@ -50,6 +67,11 @@ def main():
         print(certificate_url)
         print(certificate_path)
         print(name)
+
+        state['EMAIL_SENT'].append(record['Email address'])
+
+    with open('data/state.json','w') as f:
+        f.write(json.dumps(state, indent=2))
 
     
 

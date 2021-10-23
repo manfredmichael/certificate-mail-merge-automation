@@ -4,9 +4,13 @@ env
 templates
 imgs
 certificates
+data
 
+!data/.gitkeep
 !secrets/.gitkeep
 !templates/.gitkeep
+!imgs/.gitkeep
+!certificates/.gitkeep
 
 
 
