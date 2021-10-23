@@ -2,6 +2,7 @@
 secrets
 env
 templates
+imgs
 
 !secrets/.gitkeep
 !templates/.gitkeep

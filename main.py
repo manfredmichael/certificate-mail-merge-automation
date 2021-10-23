@@ -30,10 +30,12 @@ def main():
     filtered_response['Timestamp'] = pd.to_datetime(filtered_response['Timestamp'])
 
 
-    for i, record in filtered_response.iterrows():
-        code = create_code(record['Timestamp'], 'PT',i)
+    for i, record in filtered_response.head(1).iterrows():
+        code = create_code(record['Timestamp'], 'PT',i+1)
         name = record['Name']
-        generator['PARTICIPANT'].generate(name, code)
+        certificate_path = generator['PARTICIPANT'].generate(name, code, qr_logo='imgs/dsc_mask.png')
+        api.upload_certificate(certificate_path)
+        print(certificate_path)
         print(name)
 
 # create certificate code

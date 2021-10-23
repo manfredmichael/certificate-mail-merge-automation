@@ -1,4 +1,5 @@
 from Google import Create_Service, read_structural_elements, read_paragraph_element
+from googleapiclient.http import MediaFileUpload 
 import pandas as pd
 import time
 
@@ -19,6 +20,17 @@ class GoogleAPI:
         records = records['values'][1:]
         responses = pd.DataFrame(records, columns=columns)
         return responses
+
+    def upload_certificate(self, certificate_path):
+        media_object = MediaFileUpload(certificate_path, mimetype='application/pdf')
+        self.service_drive.files().create(
+            media_body=media_object,
+            body={
+                'parents': [self.folder_id],
+                'name': '{}'.format(certificate_path.split('/')[-1])
+            }
+        ).execute()
+
 
     def load_services(self, client_secret_path='secrets/client_secret.json'):
         self.service_drive = Create_Service(

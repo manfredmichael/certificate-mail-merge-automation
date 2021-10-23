@@ -1,8 +1,8 @@
 from PIL import Image, ImageDraw, ImageFont
 import pandas as pd
-import os
+import os, io
 import pdf2image 
-import qrcode
+import qrcode_styled
 
 class Generator:
     def __init__(self, template_filepath, font='OpenSans-SemiBold.ttf', name_size=72, code_size=30, output='certificates'):
@@ -22,17 +22,18 @@ class Generator:
         self.font_code = ImageFont.truetype(font, code_size)
         self.template = template_filepath
         self.output = output
+        self.qrcode = qrcode_styled.QRCodeStyled() 
 
-    def generate(self, name, code):
+    def generate(self, name, code, qr_logo=None):
         name = name.upper()
 
         certificate = Image.open(self.template)
         W, H = certificate.size
 
         # draw qrcode
-        qr = self.get_qrcode(code)
+        qr = self.get_qrcode(code, qr_logo)
         w, h = qr.size
-        certificate.paste(qr, (40, 330))
+        certificate.paste(qr, (60, 340))
 
         # write certificate code
         draw = ImageDraw.Draw(certificate)
@@ -55,17 +56,16 @@ class Generator:
         filename = name + '.pdf'
         filepath = os.path.join(self.output, filename)
         certificate.save(filepath) 
+        return filepath 
 
-    def get_qrcode(self, code):
+    def get_qrcode(self, code, qr_logo):
         url = 'https://dscug.club/certificate/{}'.format(code)
-        qr = qrcode.QRCode(
-            version=1,
-            box_size=5,
-            border=4,
-        )
-        qr.add_data(url)
-        qr.make(fit=True)
-        return qr.make_image()
+        if qr_logo:
+            logo = Image.open(qr_logo)
+            im_bytes = self.qrcode.get(url, logo)
+        else:
+            im_bytes = self.qrcode.get(url, )
+        return Image.open(im_bytes).resize((210, 210))
 
 
 
