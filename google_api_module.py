@@ -2,6 +2,7 @@ from Google import Create_Service, read_structural_elements, read_paragraph_elem
 from googleapiclient.http import MediaFileUpload 
 import pandas as pd
 import time
+from datetime import datetime
 
 
 class GoogleAPI:
@@ -48,6 +49,25 @@ class GoogleAPI:
         records = records['values'][1:]
         responses = pd.DataFrame(records, columns=columns)
         return responses
+
+    def add_certificate_log(self, code, name, cert_type, valid_until, url, worksheet):
+        values = [
+            code,
+            datetime.now().strftime('%d %B %Y'),
+            name,
+            cert_type,
+            valid_until,
+            url]
+        values = [values]
+        self.service_sheets.spreadsheets().values().append(
+          spreadsheetId=self.sheets_id,
+          range=worksheet,
+          body={
+              "majorDimension": "ROWS",
+              "values": values
+          },
+          valueInputOption="USER_ENTERED"
+        ).execute()
 
     def upload_certificate(self, certificate_path):
         media_object = MediaFileUpload(certificate_path, mimetype='application/pdf')

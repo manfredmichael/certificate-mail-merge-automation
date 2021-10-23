@@ -1,9 +1,10 @@
 import certificate_generator 
 from google_api_module import GoogleAPI
 import pandas as pd
-from datetime import datetime
+import utils
 
 CERTIFICATE_CODE = 'IFSN[DATE][MONTH][YEAR][TYPE][NO]'
+CERT_TYPE = 'PT'
 FONT = 'OpenSans-SemiBold.ttf'
 
 generator ={
@@ -31,26 +32,25 @@ def main():
 
 
     for i, record in filtered_response.head(1).iterrows():
-        code = create_code(record['Timestamp'], 'PT',i+1)
         name = record['Name']
-        certificate_path = generator['PARTICIPANT'].generate(name, code, qr_logo='imgs/dsc_mask.png')
+        code = utils.create_code(date_time=record['Timestamp'], 
+                                 cert_type=CERT_TYPE,
+                                 cert_no=i+1,
+                                 base=CERTIFICATE_CODE)
+        certificate_path = generator['PARTICIPANT'].generate(name, 
+                                                             code,
+                                                             qr_logo='imgs/dsc_mask.png')
         certificate_url = api.upload_certificate(certificate_path)
+        api.add_certificate_log(code=code, 
+                                name=name,
+                                cert_type='Participation',
+                                valid_until='Forever',
+                                url=certificate_url,
+                                worksheet='sertifikat web')
         print(certificate_url)
         print(certificate_path)
         print(name)
 
-# create certificate code
-def create_code(date_time, cert_type, no):
-    dd = date_time.strftime('%d')
-    mm = date_time.strftime('%m')
-    yy = date_time.strftime('%y')
-    code = CERTIFICATE_CODE.replace('[DATE]', dd)\
-                           .replace('[MONTH]', mm)\
-                           .replace('[YEAR]', yy)\
-                           .replace('[TYPE]', cert_type)\
-                           .replace('[NO]', str(no).zfill(3))\
-
-    return code
     
 
 
