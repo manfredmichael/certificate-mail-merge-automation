@@ -31,11 +31,6 @@ api.load_services('secrets/client_secret.json')
 
 
 def main():
-    for i in range(SEND_EVERY):
-        print('Sending in {} seconds '.format(SEND_EVERY-i), end='\r', flush=True)
-        time.sleep(1)
-    print(' '.join([' ' for i in range(20)]), end='\r', flush=True)
-
     while True:
         if not os.path.isfile('data/state.json'):
             with open('data/state.json','w') as f:
@@ -50,8 +45,8 @@ def main():
         registration = api.get_responses('data bervy')
         feedback = api.get_responses('feedback')
 
-        # filter attendees who filled both forms
-        filtered_response = feedback.merge(registration, 
+        
+        filtered_response = feedback.merge(registration,
                                            left_on='Email address',
                                            right_on='confirm your email')
         filtered_response['Timestamp'] = pd.to_datetime(filtered_response['Timestamp'])
@@ -81,22 +76,28 @@ def main():
 
 
             # writing email
-            print('Sending to {}'.format(name))
+            print('Sending to {}: '.format(name), end='')
             try:
                 message_text = email_template.replace('[NAME]', name)
                 api.send_certificate(email=email,
                                      subject=EMAIL_SUBJECT,
                                      message_text=message_text,
                                      certificate_path=certificate_path)
+
+                print('Success')
                 utils.add_email_log(email)
                 state['EMAIL_SENT'].append(email)
                 state['CURRENT_CERT_NO'] += 1
             except Exception as e:
                 print('An error occurred: {}'.format(e))
 
-
         with open('data/state.json','w') as f:
             f.write(json.dumps(state, indent=2))
+
+        for i in range(SEND_EVERY):
+            print('Sending in {} seconds '.format(SEND_EVERY-i), end='\r', flush=True)
+            time.sleep(1)
+        print(' '.join([' ' for i in range(20)]), end='\r', flush=True)
 
 
 if __name__ == '__main__':
