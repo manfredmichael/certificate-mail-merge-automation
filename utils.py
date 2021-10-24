@@ -11,3 +11,7 @@ def create_code(date_time, cert_type, cert_no, base):
                            .replace('[NO]', str(cert_no).zfill(3))\
 
     return code
+
+def add_email_log(email):
+    with open('data/log.txt', 'a+') as f:
+        f.write('{} : Email sent to {}'.format(datetime.now().strftime('%d/%m/%y %H/%M/%S'), email))

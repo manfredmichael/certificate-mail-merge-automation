@@ -4,7 +4,8 @@ import pandas as pd
 import utils
 import os
 import json
-import sleep
+import time
+
 
 EMAIL_TEMPLATE_PATH = 'data/email.txt'
 EMAIL_SUBJECT = 'GDSC UG INFO SESSION 2021 CERTIFICATE'
@@ -14,7 +15,7 @@ CERT_TYPE_CODE = 'PT'
 CERT_TYPE = 'Participation'
 FONT = 'OpenSans-SemiBold.ttf'
 
-SEND_EVERY = 60 # seconds
+SEND_EVERY = 5 # seconds
 
 generator ={
     'COMITTEE':certificate_generator.Generator("templates/CERTIFICATE OF COMITTEE.pdf", font=FONT),
@@ -31,7 +32,7 @@ api.load_services('secrets/client_secret.json')
 
 def main():
     for i in range(SEND_EVERY):
-        print('Sending in {} seconds '.format(10-i), end='\r', flush=True)
+        print('Sending in {} seconds '.format(SEND_EVERY-i), end='\r', flush=True)
         time.sleep(1)
     print(' '.join([' ' for i in range(20)]), end='\r', flush=True)
 
@@ -54,8 +55,6 @@ def main():
                                            left_on='Email address',
                                            right_on='confirm your email')
         filtered_response['Timestamp'] = pd.to_datetime(filtered_response['Timestamp'])
-
-
 
         for i, record in filtered_response.head(1).iterrows():
             email = record['Email address']
@@ -89,6 +88,7 @@ def main():
                                      subject=EMAIL_SUBJECT,
                                      message_text=message_text,
                                      certificate_path=certificate_path)
+                utils.add_email_log(email)
                 state['EMAIL_SENT'].append(email)
                 state['CURRENT_CERT_NO'] += 1
             except Exception as e:
@@ -97,8 +97,6 @@ def main():
 
         with open('data/state.json','w') as f:
             f.write(json.dumps(state, indent=2))
-
-    
 
 
 if __name__ == '__main__':
