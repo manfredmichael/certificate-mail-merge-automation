@@ -45,13 +45,11 @@ def main():
         registration = api.get_responses('data bervy')
         feedback = api.get_responses('feedback')
 
-        
-        filtered_response = feedback.merge(registration,
-                                           left_on='Email address',
-                                           right_on='confirm your email')
+        # no filter is applied
+        filtered_response = feedback.copy()
         filtered_response['Timestamp'] = pd.to_datetime(filtered_response['Timestamp'])
 
-        for i, record in filtered_response.head(1).iterrows():
+        for i, record in filtered_response.iterrows():
             email = record['Email address']
             name = record['Name']
             if email in state['EMAIL_SENT']:
