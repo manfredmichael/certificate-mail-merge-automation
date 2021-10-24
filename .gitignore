@@ -1,10 +1,10 @@
 **/__pycache__
-secrets
 env
-templates
-imgs
-certificates
-data
+secrets/*
+templates/*
+imgs/*
+certificates/*
+data/*
 
 !data/.gitkeep
 !secrets/.gitkeep
