@@ -5,7 +5,7 @@ import pdf2image
 import qrcode_styled
 
 class Generator:
-    def __init__(self, template_filepath, name=(435, 72), code=(73, 258, 30) , qrcode =(60, 30), font='OpenSans-SemiBold.ttf', name_size=72, code_size=30, output_folder='certificates', use_qrcode=False, qr_logo=None):
+    def __init__(self, template_filepath, name=(435, 72), code=(73, 258, 30) , qrcode =(60, 30), font='OpenSans-SemiBold.ttf', name_size=72, code_size=30, output_folder='certificates', use_qrcode=False, qr_logo_path=None):
         assert len(name) == 2    # (y, fontsize)
         assert len(code) == 3    # (x, y, fontsize) 
         assert len(qrcode) == 2  # (x, y)
@@ -24,8 +24,8 @@ class Generator:
        
         # load logo for qrcode decoration
         self.qr_logo = None
-        if qr_logo:
-            self.qr_logo = Image.open(qr_logo)
+        if qr_logo_path:
+            self.qr_logo = Image.open(qr_logo_path)
 
         self.y_name = tuple(name[0])
         self.pos_code = tuple(code[:2])
