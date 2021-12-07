@@ -5,7 +5,14 @@ import pdf2image
 import qrcode_styled
 
 class Generator:
-    def __init__(self, template_filepath, name=(435, 72), code=(73, 258, 30) , qrcode =(60, 30), font='OpenSans-SemiBold.ttf', name_size=72, code_size=30, output_folder='certificates', use_qrcode=False, qr_logo_path=None):
+    def __init__(self, template_filepath, 
+                name=(435, 72), \
+                code=(73, 258, 30), \
+                qrcode =(60, 30), \
+                font='OpenSans-SemiBold.ttf', \
+                output='certificates', \
+                use_qrcode=False, qr_logo_path=None):
+
         assert len(name) == 2    # (y, fontsize)
         assert len(code) == 3    # (x, y, fontsize) 
         assert len(qrcode) == 2  # (x, y)
@@ -27,14 +34,14 @@ class Generator:
         if qr_logo_path:
             self.qr_logo = Image.open(qr_logo_path)
 
-        self.y_name = tuple(name[0])
+        self.y_name = name[0]
         self.pos_code = tuple(code[:2])
         self.pos_qrcode = tuple(qrcode)
-        self.size_name = tuple(name[-1])
-        self.size_code = tuple(code[-1])
+        self.size_name = name[-1]
+        self.size_code = code[-1]
 
-        self.font_name = ImageFont.truetype(font, name_size)
-        self.font_code = ImageFont.truetype(font, code_size)
+        self.font_name = ImageFont.truetype(font, self.size_name)
+        self.font_code = ImageFont.truetype(font, self.size_code)
         self.template = template_filepath
         self.output = output
         self.use_qrcode = use_qrcode
