@@ -1,4 +1,4 @@
-import certificate_generator 
+# import certificate_generator 
 from google_api_module import GoogleAPI
 import pandas as pd
 import utils
@@ -7,25 +7,13 @@ import json
 import time
 
 
-EMAIL_TEMPLATE_PATH = 'data/email.txt'
-EMAIL_SUBJECT = 'GDSC UG INFO SESSION 2021 CERTIFICATE'
-
-CERTIFICATE_CODE = 'IFSN[DATE][MONTH][YEAR][TYPE][NO]'
-CERT_TYPE_CODE = 'PT'
-CERT_TYPE = 'Participation'
-FONT = 'OpenSans-SemiBold.ttf'
+EMAIL_SUBJECT = 'Google DSC Universitas Gunadarma Presents'
 
 SEND_EVERY = 5 # seconds
 
-generator ={
-    'COMITTEE':certificate_generator.Generator("templates/CERTIFICATE OF COMITTEE.pdf", font=FONT),
-    'PARTICIPANT':certificate_generator.Generator("templates/CERTIFICATE OF PARTICIPANT.pdf", font=FONT),
-    'SPEAKER':certificate_generator.Generator("templates/CERTIFICATE OF SPEAKER.pdf", font=FONT)
-}
-
-api = GoogleAPI(docs_id='',
-                sheets_id='1jvYAJhFDJ1Kgo1hbb5jrYfnyUOykx9gg6VwgfsOM3LM',
-                folder_id='1UjC4TfKLCwMYxPRckqN_I0b6BUaERLJe')
+api = GoogleAPI(docs_id='13efuqWFc9Y2OE7795zgl35fu2ZM9hF-kH9iuvHqlBlM',
+                sheets_id='11tWWn8wuZP_lxBMBPoMaJFb2pnKasfq9iyJY52mRlBg',
+                folder_id='')
 api.load_services('secrets/client_secret.json')
 
 
@@ -34,68 +22,47 @@ def main():
     while True:
         if not os.path.isfile('data/state.json'):
             with open('data/state.json','w') as f:
-                f.write(json.dumps({'EMAIL_SENT':[], 'CURRENT_CERT_NO':1}, indent=2))
+                f.write(json.dumps({'EMAIL_SENT':[]}, indent=2))
 
         with open('data/state.json','r') as f:
             state = json.load(f)
 
-        with open(EMAIL_TEMPLATE_PATH, 'r') as f:
-            email_template = '\n'.join(f.readlines())
+        # with open(EMAIL_TEMPLATE_PATH, 'r') as f:
+        #     email_template = '\n'.join(f.readlines())
 
-        registration = api.get_responses('data bervy')
-        feedback = api.get_responses('feedback')
+        member_regist = api.get_responses('Member Regist')
 
         # no filter is applied
-        filtered_response = feedback.copy()
-        filtered_response['Timestamp'] = pd.to_datetime(filtered_response['Timestamp'])
+        filtered_response = member_regist.copy().iloc[100:101]
+        print(filtered_response.shape)
+        print(filtered_response.head())
 
         for i, record in filtered_response.iterrows():
             email = record['Email address']
-            name = record['Name']
+            name = record['Nama Lengkap']
             if email in state['EMAIL_SENT']:
                 continue
 
-            i = state['CURRENT_CERT_NO']
-
-            code = utils.create_code(date_time=record['Timestamp'], 
-                                     cert_type=CERT_TYPE_CODE,
-                                     cert_no=i+1,
-                                     base=CERTIFICATE_CODE)
-            certificate_path = generator['PARTICIPANT'].generate(name, 
-                                                                 code,
-                                                                 qr_logo='imgs/dsc_mask.png')
-            certificate_url = api.upload_certificate(certificate_path)
-            api.add_certificate_log(code=code, 
-                                    name=name,
-                                    cert_type=CERT_TYPE,
-                                    valid_until='Forever',
-                                    url=certificate_url,
-                                    worksheet='sertifikat web')
-
-
             # writing email
             print('Sending to {}: '.format(name), end='')
-            try:
-                message_text = email_template.replace('[NAME]', name)
-                api.send_certificate(email=email,
-                                     subject=EMAIL_SUBJECT,
-                                     message_text=message_text,
-                                     certificate_path=certificate_path)
+            # try:
+                # api.send_certificate(email=email,
+                #                      subject=EMAIL_SUBJECT,
+                #                      message_text=message_text,
+                #                      certificate_path=certificate_path)
+            # api.send_templated_email(email=email,
+            #                          subject=EMAIL_SUBJECT)
 
-                print('Success')
-                utils.add_email_log(email)
-                state['EMAIL_SENT'].append(email)
-                state['CURRENT_CERT_NO'] += 1
-            except Exception as e:
-                print('An error occurred: {}'.format(e))
+            print('Success')
+            utils.add_email_log(email)
+            state['EMAIL_SENT'].append(email)
+            # except Exception as e:
+                # print('An error occurred: {}'.format(e))
 
         with open('data/state.json','w') as f:
             f.write(json.dumps(state, indent=2))
 
-        for i in range(SEND_EVERY):
-            print('Sending in {} seconds '.format(SEND_EVERY-i), end='\r', flush=True)
-            time.sleep(1)
-        print(' '.join([' ' for i in range(20)]), end='\r', flush=True)
+        utils.wait(SEND_EVERY)
 
 
 if __name__ == '__main__':
