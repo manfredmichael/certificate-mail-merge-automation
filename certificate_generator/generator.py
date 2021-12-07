@@ -7,8 +7,8 @@ import qrcode_styled
 class Generator:
     def __init__(self, template_filepath, 
                 name=(435, 72), \
-                code=(73, 258, 30), \
-                qrcode =(60, 30), \
+                code=(71, 258, 30), \
+                qrcode =(60, 340), \
                 font='OpenSans-SemiBold.ttf', \
                 output='certificates', \
                 use_qrcode=False, qr_logo_path=None):
