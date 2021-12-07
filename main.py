@@ -10,14 +10,13 @@ REGISTERED_EMAIL_COLUMN = 'Confirm you email...'
 
 attendance = pd.read_csv('data/Recipients.csv')
 registered = pd.read_csv('data/Registered Attendees.csv')
-print(attendance.columns)
-print(registered.columns)
 
 # Filter only attendance who both registered & attended the event
 filtered = attendance.merge(registered,
                             left_on=ATTENDANCE_EMAIL_COLUMN,
                             right_on=REGISTERED_EMAIL_COLUMN)
 
+# Configure name, certificate code & qrcode positions
 generator = Generator(template_filepath='templates/CERTIFICATE OF PARTICIPANT.pdf',
                       name=(435, 72),
                       code=(72, 262, 25),
@@ -26,8 +25,7 @@ generator = Generator(template_filepath='templates/CERTIFICATE OF PARTICIPANT.pd
                       use_qrcode=True,
                       qr_logo_path='imgs/dsc_mask.png')
 
-
-
+# Setup certificate code
 CERTIFICATE_CODE = 'MYML041221PT'
 START_CERTIFICATE_NO = 1
 
@@ -39,7 +37,6 @@ for i, row in tqdm(filtered.iterrows(), total=len(filtered)):
     generator.generate(row['Full Name'], certificate_code)
 
 # TODO:
-# - Participant: Filter participants who both registered and attended the event 
 # - Participant: Add Tamu Undangan
 
 
