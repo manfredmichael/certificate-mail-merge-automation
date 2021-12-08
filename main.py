@@ -35,8 +35,3 @@ for i, row in tqdm(filtered.iterrows(), total=len(filtered)):
     certificate_code = utils.create_code(CERTIFICATE_CODE,
                                          START_CERTIFICATE_NO+i)
     generator.generate(row['Full Name'], certificate_code)
-
-# TODO:
-# - Participant: Add Tamu Undangan
-
-
