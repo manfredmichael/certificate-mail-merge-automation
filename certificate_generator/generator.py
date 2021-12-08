@@ -13,21 +13,9 @@ class Generator:
                 output='certificates', \
                 use_qrcode=False, qr_logo_path=None):
 
-        assert len(name) == 2    # (y, fontsize)
-        assert len(code) == 3    # (x, y, fontsize) 
-        assert len(qrcode) == 2  # (x, y)
-
-        # create output dir
-        if not os.path.isdir(output):
-            os.makedirs(output)
-
-        # convert pdf template to jpg
-        if template_filepath.split('.')[-1] == 'pdf':
-            png_filepath = template_filepath[:-4] + '.png'
-            if not os.path.isfile(png_filepath):
-                img = pdf2image.convert_from_path(template_filepath)[0]
-                img.save(png_filepath)
-            template_filepath = png_filepath
+        self.check_arguments(name, code, qrcode)
+        self.initialize_project_tree(output)
+        template_filepath = self.convert_template_to_jpg(template_filepath)
        
         # load logo for qrcode decoration
         self.qr_logo = None
@@ -46,7 +34,26 @@ class Generator:
         self.output = output
         self.use_qrcode = use_qrcode
         self.qrcode = qrcode_styled.QRCodeStyled() 
-        
+
+    def convert_template_to_jpg(self, template_filepath):
+        # convert pdf template to jpg
+        if template_filepath.split('.')[-1] == 'pdf':
+            png_filepath = template_filepath[:-4] + '.png'
+            if not os.path.isfile(png_filepath):
+                img = pdf2image.convert_from_path(template_filepath)[0]
+                img.save(png_filepath)
+            template_filepath = png_filepath
+        return template_filepath
+
+    def initialize_project_tree(self, output):
+        # create output dir
+        if not os.path.isdir(output):
+            os.makedirs(output)
+
+    def check_arguments(self, name, code, qrcode):
+        assert len(name) == 2    # (y, fontsize)
+        assert len(code) == 3    # (x, y, fontsize) 
+        assert len(qrcode) == 2  # (x, y)
 
     def generate(self, name, code):
         name = name.upper()
