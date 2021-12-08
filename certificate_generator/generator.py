@@ -36,14 +36,17 @@ class Generator:
         self.qrcode = qrcode_styled.QRCodeStyled() 
 
     def convert_template_to_jpg(self, template_filepath):
+        template_filename, template_format = os.path.splitext(template_filepath)
+        png_filepath = template_filename + '.png'
+        if template_format == 'pdf':
+            self.create_png_template(template_filepath, png_filepath)
+        return template_filename + '.png'
+
+    def create_png_template(self, template_filepath, png_filepath):
         # convert pdf template to jpg
-        if template_filepath.split('.')[-1] == 'pdf':
-            png_filepath = template_filepath[:-4] + '.png'
-            if not os.path.isfile(png_filepath):
-                img = pdf2image.convert_from_path(template_filepath)[0]
-                img.save(png_filepath)
-            template_filepath = png_filepath
-        return template_filepath
+        if not os.path.isfile(png_filepath):
+            img = pdf2image.convert_from_path(template_filepath)[0]
+            img.save(png_filepath)
 
     def initialize_project_tree(self, output):
         # create output dir
