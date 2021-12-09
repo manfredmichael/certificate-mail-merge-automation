@@ -38,7 +38,7 @@ class Generator:
     def convert_template_to_jpg(self, template_filepath):
         template_filename, template_format = os.path.splitext(template_filepath)
         png_filepath = template_filename + '.png'
-        if template_format == 'pdf':
+        if template_format == '.pdf':
             self.create_png_template(template_filepath, png_filepath)
         return template_filename + '.png'
 
