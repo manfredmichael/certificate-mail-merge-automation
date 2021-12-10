@@ -1,8 +1,8 @@
 import pandas as pd
 from tqdm import tqdm
 
-from certificate_generator.generator import Generator
-from certificate_generator import utils
+from modules.certificate_generator.generator import Generator
+from modules.certificate_generator import utils
 
 
 ATTENDANCE_EMAIL_COLUMN = 'Username'
@@ -17,12 +17,13 @@ filtered = attendance.merge(registered,
                             right_on=REGISTERED_EMAIL_COLUMN)
 
 # Configure name, certificate code & qrcode positions
-generator = Generator(template_filepath='templates/CERTIFICATE OF PARTICIPANT.pdf',
+generator = Generator(template_filepath='templates/techtalk/CERTIFICATE OF PARTICIPANT.pdf',
                       name=(435, 72),
                       code=(72, 262, 25),
                       qrcode =(60, 340),
                       font='OpenSans-SemiBold.ttf',
                       use_qrcode=True,
+                      output='certificates/peserta_',
                       qr_logo_path='imgs/dsc_mask.png')
 
 # Setup certificate code
