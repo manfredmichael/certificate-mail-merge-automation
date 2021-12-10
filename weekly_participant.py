@@ -31,9 +31,14 @@ for i, row in tqdm(recipients.iterrows(), total=len(recipients)):
     certificate_code = create_code(CERTIFICATE_CODE,
                                          START_CERTIFICATE_NO+i)
     generator.generate(row['Name'], certificate_code)
-    # certificate_info = 
-    # result_df.append([row['Username'], row['Name'], certificate_code])
-# pd.DataFrame(result_df).to_csv('certificates/weekly-peserta/result.csv')
+    certificate_info = get_certificate_info(name=row['Name'],
+                                            code=certificate_code,
+                                            type='Participant',
+                                            url='',
+                                            date_published='4 December 2021',
+                                            valid_until='Forever')
+    result_df.append(certificate_info)
+pd.DataFrame(result_df).to_csv('certificates/weekly-peserta/result.csv')
 
 # TODO:
 # - Participant: Add Tamu Undangan
