@@ -11,9 +11,10 @@ import os
 
 
 class GoogleAPI:
-    def __init__(self, folder_id, client_secret_path='secrets/client_secret.json'):
+    def __init__(self, folder_id, mailmerge_name=None, client_secret_path='secrets/client_secret.json'):
         self.folder_id = folder_id
         self.load_services(client_secret_path)
+        self.gmail_logger = GmailLogger(mailmerge_name)    # To prevent sending email more than once
 
     def load_services(self, client_secret_path):
         self.service_drive = Create_Service(
@@ -70,3 +71,30 @@ class GmailAPI:
         message = self.service_gmail.users().messages().send(
                 userId='me',
                 body={'raw': raw}).execute()
+
+class GmailLogger:
+    def __init__(self, mailmerge_name):
+        self.name = name
+        self.log = self.load_current_log()
+
+    def create_log_file(self):
+        if not os.path.isfile(f'data/{self.name}.json'):
+            with open(f'data/{self.name}.json','w') as f:
+                f.write(json.dumps({'EMAIL_SENT':[], 'CURRENT_CERT_NO':1}, indent=2))
+
+    def load_current_logd(self):
+        with open(f'data/{self.name}.json','r') as f:
+            return json.load(f)
+
+    def is_sent(self, email):
+        return email in self.log['EMAIL_SENT']
+
+    def add_log(self, email):
+        self.log['EMAIL_SENT'].append(email)
+        self.log['CURRENT_CERT_NO'] += 1
+
+    def save_log(self): 
+        with open(f'data/{self.name}.json','w') as f:
+            f.write(json.dumps(self.log, indent=2))
+    
+
