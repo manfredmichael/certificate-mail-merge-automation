@@ -8,13 +8,16 @@ import pandas as pd
 import time
 import base64
 import os
+import logging
 
 
 class GoogleAPI:
     def __init__(self, folder_id, mailmerge_name=None, client_secret_path='secrets/client_secret.json'):
         self.folder_id = folder_id
         self.load_services(client_secret_path)
-        self.gmail_logger = GmailLogger(mailmerge_name)    # To prevent sending email more than once
+
+        if mailmerge_name:
+            self.gmail_logger = GmailLogger(mailmerge_name)    # To prevent sending email more than once
 
     def load_services(self, client_secret_path):
         self.service_drive = Create_Service(
@@ -42,7 +45,18 @@ class GoogleAPI:
         return url
 
     def send_certificate(self, email, subject, message_text, certificate_path):
-        self.gmail.send_email(email, subject, message_text, certificate_path)
+        if not self.gmail_logger.is_sent(email):
+            try:
+                logging.debug(f'Email is being sent to {email}: ', end='')
+                self.gmail.send_email(email, subject, message_text, certificate_path)
+                self.gmail_logger.add_log(email)
+                logging.debug(f'Succesful!')
+            except Exception as e:
+                logging.error(e)
+            finally:
+                self.gmail_logger.save_log()
+
+
 
 class GmailAPI:
     def __init__(self, client_secret_path):
