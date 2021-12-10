@@ -1,8 +1,14 @@
 import pandas as pd
 from tqdm import tqdm
 
-from certificate_generator.generator import Generator
-from certificate_generator import utils
+from modules.certificate_generator.generator import Generator
+from modules.certificate_generator.utils import create_code
+from modules.google_api.google_api import GoogleAPI
+from modules.google_api.utils import get_certificate_info
+
+# Initialize Gooogle API & configure folder id to store certificates remotely
+api = GoogleAPI(folder_id='1WJiZmgTL4IPbR1stfES7GCFBPJ3taQA7',
+                client_secret_path='secrets/client_secret.json')
 
 
 # Configure name, certificate code & qrcode positions
@@ -27,13 +33,16 @@ print(f'{len(recipients)} certificates will be generated')
 
 result_df = [] 
 for i, name in tqdm(enumerate(recipients), total=len(recipients)):
-    certificate_code = utils.create_code(CERTIFICATE_CODE,
+    certificate_code = create_code(CERTIFICATE_CODE,
                                          START_CERTIFICATE_NO+i)
-    generator.generate(name, certificate_code)
-    result_df.append([name, certificate_code])
+    certificate_path = generator.generate(name, certificate_code)
+
+    certificate_url = api.upload_certificate_to_drive(certificate_path)
+    certificate_info = get_certificate_info(name=name,
+                                            code=certificate_code,
+                                            type='Best Students',
+                                            url=certificate_url,
+                                            date_published='11 November 2021',
+                                            valid_until='Forever')
+    result_df.append(certificate_info)
 pd.DataFrame(result_df).to_csv('certificates/weekly-appreciation/result.csv')
-
-# TODO:
-# - Participant: Add Tamu Undangan
-
-

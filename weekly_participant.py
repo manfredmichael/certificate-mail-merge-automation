@@ -6,6 +6,10 @@ from modules.certificate_generator.utils import create_code
 from modules.google_api.google_api import GoogleAPI
 from modules.google_api.utils import get_certificate_info
 
+# Initialize Gooogle API & configure folder id to store certificates remotely
+api = GoogleAPI(folder_id='1WJiZmgTL4IPbR1stfES7GCFBPJ3taQA7',
+                client_secret_path='secrets/client_secret.json')
+
 # Configure name, certificate code & qrcode positions
 generator = Generator(template_filepath='templates/weekly/CERTIFICATE OF PARTICIPATION - WEEK 123.pdf',
                       name=(510, 72),
@@ -30,17 +34,14 @@ result_df = []
 for i, row in tqdm(recipients.iterrows(), total=len(recipients)):
     certificate_code = create_code(CERTIFICATE_CODE,
                                          START_CERTIFICATE_NO+i)
-    generator.generate(row['Name'], certificate_code)
+    certificate_path = generator.generate(row['Name'], certificate_code)
+
+    certificate_url = api.upload_certificate_to_drive(certificate_path)
     certificate_info = get_certificate_info(name=row['Name'],
                                             code=certificate_code,
                                             type='Participant',
-                                            url='',
+                                            url=certificate_url,
                                             date_published='4 December 2021',
                                             valid_until='Forever')
     result_df.append(certificate_info)
 pd.DataFrame(result_df).to_csv('certificates/weekly-peserta/result.csv')
-
-# TODO:
-# - Participant: Add Tamu Undangan
-
-
