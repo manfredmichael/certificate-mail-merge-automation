@@ -9,15 +9,16 @@ import time
 import base64
 import os
 import logging
+import json
 
 
 class GoogleAPI:
-    def __init__(self, folder_id, mailmerge_name=None, client_secret_path='secrets/client_secret.json'):
+    def __init__(self, folder_id, mailmerge_log_name=None, client_secret_path='secrets/client_secret.json'):
         self.folder_id = folder_id
         self.load_services(client_secret_path)
 
-        if mailmerge_name:
-            self.gmail_logger = GmailLogger(mailmerge_name)    # To prevent sending email more than once
+        if mailmerge_log_name:
+            self.gmail_logger = GmailLogger(mailmerge_log_name)    # To prevent sending email more than once
 
     def load_services(self, client_secret_path):
         self.service_drive = Create_Service(
@@ -47,12 +48,12 @@ class GoogleAPI:
     def send_certificate(self, email, subject, message_text, certificate_path):
         if not self.gmail_logger.is_sent(email):
             try:
-                logging.debug(f'Email is being sent to {email}: ', end='')
+                print(f'Email is being sent to {email}: ', end='')
                 self.gmail.send_email(email, subject, message_text, certificate_path)
                 self.gmail_logger.add_log(email)
-                logging.debug(f'Succesful!')
+                print(f'Succesful!')
             except Exception as e:
-                logging.error(e)
+                print(e)
             finally:
                 self.gmail_logger.save_log()
 
@@ -82,13 +83,14 @@ class GmailAPI:
                               filename=certificate_path.split('/')[-1])
         message.attach(attachment)
         raw = base64.urlsafe_b64encode(message.as_bytes()).decode()
-        message = self.service_gmail.users().messages().send(
+        message = self.service.users().messages().send(
                 userId='me',
                 body={'raw': raw}).execute()
 
 class GmailLogger:
-    def __init__(self, mailmerge_name):
+    def __init__(self, name):
         self.name = name
+        self.create_log_file()
         self.log = self.load_current_log()
 
     def create_log_file(self):
@@ -96,7 +98,7 @@ class GmailLogger:
             with open(f'data/{self.name}.json','w') as f:
                 f.write(json.dumps({'EMAIL_SENT':[], 'CURRENT_CERT_NO':1}, indent=2))
 
-    def load_current_logd(self):
+    def load_current_log(self):
         with open(f'data/{self.name}.json','r') as f:
             return json.load(f)
 
