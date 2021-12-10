@@ -15,7 +15,7 @@ class GoogleAPI:
         self.folder_id = folder_id
         self.load_services(client_secret_path)
 
-    def load_services(self, client_secret_path=client_secret_path):
+    def load_services(self, client_secret_path):
         self.service_drive = Create_Service(
             client_secret_path,
             'drive',
