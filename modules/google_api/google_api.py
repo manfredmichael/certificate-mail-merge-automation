@@ -1,4 +1,4 @@
-from GoogleUtils import Create_Service, read_structural_elements, read_paragraph_element
+from .GoogleUtils import Create_Service, read_structural_elements, read_paragraph_element
 from googleapiclient.http import MediaFileUpload 
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
@@ -15,7 +15,7 @@ class GoogleAPI:
         self.folder_id = folder_id
         self.load_services(client_secret_path)
 
-    def load_services(self, client_secret_path=client_secret_path):
+    def load_services(self, client_secret_path):
         self.service_drive = Create_Service(
             client_secret_path,
             'drive',

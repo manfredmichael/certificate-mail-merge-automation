@@ -1,9 +1,10 @@
 import pandas as pd
 from tqdm import tqdm
 
-from certificate_generator.generator import Generator
-from certificate_generator import utils
-
+from modules.certificate_generator.generator import Generator
+from modules.certificate_generator.utils import create_code
+from modules.google_api.google_api import GoogleAPI
+from modules.google_api.utils import get_certificate_info
 
 # Configure name, certificate code & qrcode positions
 generator = Generator(template_filepath='templates/weekly/CERTIFICATE OF PARTICIPATION - WEEK 123.pdf',
@@ -27,11 +28,12 @@ print(f'{len(recipients)} certificates will be generated')
 
 result_df = [] 
 for i, row in tqdm(recipients.iterrows(), total=len(recipients)):
-    certificate_code = utils.create_code(CERTIFICATE_CODE,
+    certificate_code = create_code(CERTIFICATE_CODE,
                                          START_CERTIFICATE_NO+i)
     generator.generate(row['Name'], certificate_code)
-    result_df.append([row['Username'], row['Name'], certificate_code])
-pd.DataFrame(result_df).to_csv('certificates/weekly-peserta/result.csv')
+    # certificate_info = 
+    # result_df.append([row['Username'], row['Name'], certificate_code])
+# pd.DataFrame(result_df).to_csv('certificates/weekly-peserta/result.csv')
 
 # TODO:
 # - Participant: Add Tamu Undangan
