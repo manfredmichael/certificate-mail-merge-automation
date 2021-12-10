@@ -24,11 +24,8 @@ class GoogleAPI:
         )
         time.sleep(2)
 
-        self.service_gmail = Create_Service(
-            client_secret_path,
-            'gmail', 'v1',
-            ['https://mail.google.com/'])
-        time.sleep(2)
+        self.gmail = GmailAPI(client_secret_path)
+
 
     def upload_certificate_to_drive(self, certificate_path):
         media_object = MediaFileUpload(certificate_path, mimetype='application/pdf')
@@ -44,6 +41,17 @@ class GoogleAPI:
         return url
 
     def send_certificate(self, email, subject, message_text, certificate_path):
+        self.gmail.send_email(email, subject, message_text, certificate_path)
+
+class GmailAPI:
+    def __init__(self, client_secret_path):
+        self.service = Create_Service(
+            client_secret_path,
+            'gmail', 'v1',
+            ['https://mail.google.com/'])
+        time.sleep(2)
+
+    def send_email(self, email, subject, message_text, certificate_path):
         # writing email
         message = MIMEMultipart()
         message['to'] = email 
@@ -62,4 +70,3 @@ class GoogleAPI:
         message = self.service_gmail.users().messages().send(
                 userId='me',
                 body={'raw': raw}).execute()
-
