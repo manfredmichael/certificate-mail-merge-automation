@@ -1,4 +1,4 @@
-from GoogleUtils import Create_Service, read_structural_elements, read_paragraph_element
+from .GoogleUtils import Create_Service, read_structural_elements, read_paragraph_element
 from googleapiclient.http import MediaFileUpload 
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
