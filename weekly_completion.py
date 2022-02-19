@@ -8,7 +8,7 @@ from modules.google_api.utils import get_certificate_info
 
 
 # Initialize Gooogle API & configure folder id to store certificates remotely
-api = GoogleAPI(folder_id='1WJiZmgTL4IPbR1stfES7GCFBPJ3taQA7',
+api = GoogleAPI(folder_id='1h0FkzMz0KRrv5crJziF9VpczD8QbO1hN',
                 client_secret_path='secrets/client_secret.json')
 
 # Configure name, certificate code & qrcode positions
@@ -23,10 +23,10 @@ generator = Generator(template_filepath='templates/weekly/CERTIFICATE OF COMPLET
 
 
 # Load recipients data
-recipients = pd.read_csv('data/Weekly21 - Completion')
+recipients = pd.read_csv('data/weekly/WEB - COMPLETION')
 
 # Setup certificate code
-CERTIFICATE_CODE = 'WYML191121CP'
+CERTIFICATE_CODE = 'WYWD200122CP'
 START_CERTIFICATE_NO = 1
 
 print(f'{len(recipients)} certificates will be generated')

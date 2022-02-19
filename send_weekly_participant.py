@@ -7,29 +7,23 @@ from modules.google_api.google_api import GoogleAPI
 from modules.google_api.utils import get_certificate_info
 
 
-recipients = pd.read_csv('data/Weekly21 - Completion')
+recipients = pd.read_csv('data/weekly/WEB - Weekly- Participant')
 recipients = recipients.drop_duplicates('Name')
-drive_info = pd.read_csv('certificates/weekly-completion/result.csv')
+drive_info = pd.read_csv('certificates/weekly-peserta/result.csv')
 drive_info = drive_info.drop_duplicates('2')
 
 merged_df = recipients.merge(drive_info, left_on='Name', right_on='2')
 
 
-SUBJECT = 'Completed Submission: Recommendation System with Tensorflow - Weekly Class Machine Learning/AI 2021'
-MESSAGE = "Hello!\n\
-Thank you for completing your recommendation system submission! If you recieve this email, you have participated in all 3 weeks of ML & AI Weekly Class and Submitted your github & heroku link. \
-We are so delighted to reward your effort with this Completion Certificate!\n\
-\n\
-Best regards,\n\
-GDSC UG\n\
-Together We Grow <>"
+SUBJECT = 'Weekly Class Web Development 2022 Participation'
+MESSAGE = open('templates/weekly/participant-email-text').read()
 
-api = GoogleAPI(folder_id='1WJiZmgTL4IPbR1stfES7GCFBPJ3taQA7',
+api = GoogleAPI(folder_id='1i9XtuYN4XWvLjeG7Shcfqz8wp8xci5W8',
                 client_secret_path='secrets/client_secret.json',
-                mailmerge_log_name='weekly-completion')
+                mailmerge_log_name='weekly-participant')
 
-CERTIFICATE_FOLDER = 'certificates/weekly-completion/'
+CERTIFICATE_FOLDER = 'certificates/weekly-peserta/'
 import os
 for i, row in merged_df.iterrows():
     certificate_path = CERTIFICATE_FOLDER + row['Name'].upper() + '.pdf'
-    api.send_certificate(row['Username'], SUBJECT, MESSAGE, certificate_path)
+    api.send_certificate(row['Username'], SUBJECT, MESSAGE.replace('[NAME]', row['Name']), certificate_path)
