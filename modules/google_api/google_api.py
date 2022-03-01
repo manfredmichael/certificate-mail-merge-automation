@@ -10,6 +10,7 @@ import base64
 import os
 import logging
 import json
+from colorama import Fore, Style
 
 
 class GoogleAPI:
@@ -51,9 +52,9 @@ class GoogleAPI:
                 print(f'Email is being sent to {email}: ', end='')
                 self.gmail.send_email(email, subject, message_text, certificate_path)
                 self.gmail_logger.add_log(email)
-                print(f'Succesful!')
+                print(Fore.GREEN + 'Succesful!' + Style.RESET_ALL)
             except Exception as e:
-                print(e)
+                print(Fore.RED + e + Style.RESET_ALL)
             finally:
                 self.gmail_logger.save_log()
 
