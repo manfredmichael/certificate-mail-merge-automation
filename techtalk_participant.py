@@ -7,26 +7,23 @@ from modules.google_api.google_api import GoogleAPI
 from modules.google_api.utils import get_certificate_info
 
 # Initialize Gooogle API & configure folder id to store certificates remotely
-api = GoogleAPI(folder_id='1WJiZmgTL4IPbR1stfES7GCFBPJ3taQA7',
+api = GoogleAPI(folder_id='1h-yvyo_4cBXzVWMfuC-QDh6qxyFnkaso',
                 client_secret_path='secrets/client_secret.json')
 
-# Initialize Gooogle API & configure folder id to store certificates remotely
-api = GoogleAPI(folder_id='1WJiZmgTL4IPbR1stfES7GCFBPJ3taQA7',
-                client_secret_path='secrets/client_secret.json')
+ATTENDANCE_EMAIL_COLUMN = 'Email Address'
+#REGISTERED_EMAIL_COLUMN = 'Confirm you email...'
 
-ATTENDANCE_EMAIL_COLUMN = 'Username'
-REGISTERED_EMAIL_COLUMN = 'Confirm you email...'
-
-attendance = pd.read_csv('data/Recipients.csv')
-registered = pd.read_csv('data/Registered Attendees.csv')
+attendance = pd.read_csv('data/monthly/Certificate Tech Talk Web Development 2022 (Responses) - Form Responses 1.csv')
+#registered = pd.read_csv('data/Registered Attendees.csv')
 
 # Filter only attendance who both registered & attended the event
-filtered = attendance.merge(registered,
-                            left_on=ATTENDANCE_EMAIL_COLUMN,
-                            right_on=REGISTERED_EMAIL_COLUMN)
+#filtered = attendance.merge(registered,
+#                            left_on=ATTENDANCE_EMAIL_COLUMN,
+#                            right_on=REGISTERED_EMAIL_COLUMN)
+filtered = attendance.copy()
 
 # Configure name, certificate code & qrcode positions
-generator = Generator(template_filepath='templates/techtalk/CERTIFICATE OF PARTICIPANT.pdf',
+generator = Generator(template_filepath='templates/monthly/CERTIFICATE OF PARTICIPANT_TTD.pdf',
                       name=(435, 72),
                       code=(72, 262, 25),
                       qrcode =(60, 340),
@@ -36,7 +33,7 @@ generator = Generator(template_filepath='templates/techtalk/CERTIFICATE OF PARTI
                       qr_logo_path='imgs/dsc_mask.png')
 
 # Setup certificate code
-CERTIFICATE_CODE = 'MYML041221PT'
+CERTIFICATE_CODE = 'MYWDL190222PT'
 START_CERTIFICATE_NO = 1
 
 print(f'{len(filtered)} certificates will be generated')
@@ -52,7 +49,7 @@ for i, row in tqdm(filtered.iterrows(), total=len(filtered)):
                                             code=certificate_code,
                                             type='Participant',
                                             url=certificate_url,
-                                            date_published='4 December 2021',
+                                            date_published='20 February 2022',
                                             valid_until='Forever')
     result_df.append(certificate_info)
 pd.DataFrame(result_df).to_csv('certificates/techtalk-peserta/result.csv')
