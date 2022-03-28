@@ -7,11 +7,11 @@ from modules.google_api.google_api import GoogleAPI
 from modules.google_api.utils import get_certificate_info
 
 # Initialize Gooogle API & configure folder id to store certificates remotely
-api = GoogleAPI(folder_id='1WJiZmgTL4IPbR1stfES7GCFBPJ3taQA7',
+api = GoogleAPI(folder_id='1gf1zE_pvJf2AgC52rrKQkgN8kWhPC36Z',
                 client_secret_path='secrets/client_secret.json')
 
 # Configure name, certificate code & qrcode positions
-generator = Generator(template_filepath='templates/techtalk/CERTIFICATE OF PARTICIPANT.pdf',
+generator = Generator(template_filepath='templates/monthly/CERTIFICATE OF PARTICIPANT_TTD.pdf',
                       name=(435, 72),
                       code=(72, 262, 25),
                       qrcode =(60, 340),
@@ -22,11 +22,11 @@ generator = Generator(template_filepath='templates/techtalk/CERTIFICATE OF PARTI
 
 
 # Load recipients data
-recipients = open('data/tamu_undangan.txt').readlines()
+recipients = open('data/monthly/tamu_undangan.txt').readlines()
 
 # Setup certificate code
-CERTIFICATE_CODE = 'MYML041221PT'
-START_CERTIFICATE_NO = 107 
+CERTIFICATE_CODE = 'MYWDL190222PT'
+START_CERTIFICATE_NO = 83 
 
 print(f'{len(recipients)} certificates will be generated')
 
@@ -41,7 +41,7 @@ for i, name in tqdm(enumerate(recipients), total=len(recipients)):
                                             code=certificate_code,
                                             type='Tamu Undangan',
                                             url=certificate_url,
-                                            date_published='4 December 2021',
+                                            date_published='20 February 2022',
                                             valid_until='Forever')
     result_df.append(certificate_info)
 pd.DataFrame(result_df).to_csv('certificates/techtalk-tamu_undangan/result.csv')

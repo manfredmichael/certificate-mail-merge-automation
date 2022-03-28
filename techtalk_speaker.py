@@ -7,11 +7,11 @@ from modules.google_api.google_api import GoogleAPI
 from modules.google_api.utils import get_certificate_info
 
 # Initialize Gooogle API & configure folder id to store certificates remotely
-api = GoogleAPI(folder_id='1WJiZmgTL4IPbR1stfES7GCFBPJ3taQA7',
+api = GoogleAPI(folder_id='1lyS7vbLMMszdYjm9GIGSahtFApVRHQ-z',
                 client_secret_path='secrets/client_secret.json')
 
 # Configure name, certificate code & qrcode positions
-generator = Generator(template_filepath='templates/techtalk/CERTIFICATE OF SPEAKER.pdf',
+generator = Generator(template_filepath='templates/monthly/CERTIFICATE OF SPEAKER_TTD.pdf',
                       name=(435, 72),
                       code=(72, 262, 25),
                       qrcode =(60, 340),
@@ -22,10 +22,10 @@ generator = Generator(template_filepath='templates/techtalk/CERTIFICATE OF SPEAK
 
 
 # Load recipients data
-recipients = open('data/speaker.txt').readlines()
+recipients = open('data/monthly/speaker.txt').readlines()
 
 # Setup certificate code
-CERTIFICATE_CODE = 'MYML041221SP'
+CERTIFICATE_CODE = 'MYWDL190222SP'
 START_CERTIFICATE_NO = 1 
 
 print(f'{len(recipients)} certificates will be generated')

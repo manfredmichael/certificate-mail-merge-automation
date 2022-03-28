@@ -8,11 +8,11 @@ from modules.google_api.utils import get_certificate_info
 
 
 # Initialize Gooogle API & configure folder id to store certificates remotely
-api = GoogleAPI(folder_id='1WJiZmgTL4IPbR1stfES7GCFBPJ3taQA7',
+api = GoogleAPI(folder_id='1scindZMmsD3rgFrsnc4tm8CA1IFXf3wH',
                 client_secret_path='secrets/client_secret.json')
 
 # Configure name, certificate code & qrcode positions
-generator = Generator(template_filepath='templates/techtalk/CERTIFICATE OF COMMITEE.pdf',
+generator = Generator(template_filepath='templates/monthly/CERTIFICATE OF COMITTEE_TTD.pdf',
                       name=(435, 72),
                       code=(72, 262, 25),
                       qrcode =(60, 340),
@@ -23,10 +23,10 @@ generator = Generator(template_filepath='templates/techtalk/CERTIFICATE OF COMMI
 
 
 # Load recipients data
-recipients = open('data/coreteam.txt').readlines()
+recipients = open('data/monthly/comitee.txt').readlines()
 
 # Setup certificate code
-CERTIFICATE_CODE = 'MYML041221CM'
+CERTIFICATE_CODE = 'MYWDL190222CM'
 START_CERTIFICATE_NO = 1 
 
 print(f'{len(recipients)} certificates will be generated')
@@ -42,7 +42,7 @@ for i, name in tqdm(enumerate(recipients), total=len(recipients)):
                                             code=certificate_code,
                                             type='Commitee',
                                             url=certificate_url,
-                                            date_published='4 December 2021',
+                                            date_published='20 February 2022',
                                             valid_until='Forever')
     result_df.append(certificate_info)
 pd.DataFrame(result_df).to_csv('certificates/techtalk-commitee/result.csv')
