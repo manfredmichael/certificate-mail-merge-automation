@@ -32,7 +32,12 @@ def Create_Service(client_secret_file, api_name, api_version, *scopes):
             cred.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
-            cred = flow.run_local_server(port=8001)
+            for i in range(5):
+                try:
+                    cred = flow.run_local_server(port=8000 + i)
+                    break
+                except:
+                    continue
 
         with open(os.path.join(working_dir, token_dir, pickle_file), 'wb') as token:
             pickle.dump(cred, token)
