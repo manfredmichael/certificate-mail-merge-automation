@@ -42,12 +42,12 @@ class GoogleAPI:
                                     fields='id').execute()
         return file.get('id')
 
-    def upload_certificate_to_drive(self, certificate_path):
+    def upload_certificate_to_drive(self, certificate_path, folder_id):
         media_object = MediaFileUpload(certificate_path, mimetype='application/pdf')
         certificate = self.service_drive.files().create(
             media_body=media_object,
             body={
-                'parents': [self.folder_id],
+                'parents': [folder_id],
                 'name': os.path.basename(certificate_path)
             },
             fields='webViewLink'
