@@ -3,7 +3,7 @@ from googleapiclient.http import MediaFileUpload
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from datetime import datetime
+from datetime import datetime 
 import pandas as pd
 import time
 import base64
@@ -32,6 +32,15 @@ class GoogleAPI:
 
         self.gmail = GmailAPI(client_secret_path)
 
+    def create_folder(self, folder_name):
+        file_metadata = {
+            'name': folder_name,
+            'parents': [self.folder_id],
+            'mimeType': 'application/vnd.google-apps.folder'
+        }
+        file = self.service_drive.files().create(body=file_metadata,
+                                    fields='id').execute()
+        return file.get('id')
 
     def upload_certificate_to_drive(self, certificate_path):
         media_object = MediaFileUpload(certificate_path, mimetype='application/pdf')
