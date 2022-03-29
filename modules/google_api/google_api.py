@@ -104,12 +104,12 @@ class GmailLogger:
         self.log = self.load_current_log()
 
     def create_log_file(self):
-        if not os.path.isfile(f'data/{self.name}.json'):
-            with open(f'data/{self.name}.json','w') as f:
+        if not os.path.isfile(f'logs/{self.name}.json'):
+            with open(f'logs/{self.name}.json','w') as f:
                 f.write(json.dumps({'EMAIL_SENT':[], 'CURRENT_CERT_NO':1}, indent=2))
 
     def load_current_log(self):
-        with open(f'data/{self.name}.json','r') as f:
+        with open(f'logs/{self.name}.json','r') as f:
             return json.load(f)
 
     def is_sent(self, email):
@@ -120,7 +120,7 @@ class GmailLogger:
         self.log['CURRENT_CERT_NO'] += 1
 
     def save_log(self): 
-        with open(f'data/{self.name}.json','w') as f:
+        with open(f'logs/{self.name}.json','w') as f:
             f.write(json.dumps(self.log, indent=2))
     
 
