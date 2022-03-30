@@ -28,6 +28,28 @@ class Sender:
         return data_templates
             
 
+    def get_data_template_components(self, folder_name):
+        data_path = os.path.join('data', folder_name)
+        component_filenames = os.listdir(data_path)
+
+        # filter components by extension
+        recipients = list(filter(lambda x: os.path.splitext(x)[1] == '.csv', component_filenames))
+        message = list(filter(lambda x: os.path.splitext(x)[1] == '.txt', component_filenames))
+        certificate = list(filter(lambda x: os.path.splitext(x)[1] == '.pdf', component_filenames))
+        if len(certificate) == 0:
+            certificate = list(filter(lambda x: os.path.splitext(x)[1] == '.png', component_filenames))
+
+        components = {
+            'recipient': recipients,
+            'message': message,
+            'certificate': certificate,
+        }
+
+        # check if required components are valid
+        components = self.validate_components(folder_name, components)
+        return components
+
+            
 
     def get_data_templates_folders(self):
         data_templates = os.listdir('data')
