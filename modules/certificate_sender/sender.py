@@ -24,7 +24,7 @@ class Sender:
 
     def generate(self, folder_name, data_template):
         data_path = os.path.join('data', folder_name) 
-        certificate_output_path = os.path.join('certificate', folder_name) 
+        certificate_output_path = os.path.join('certificates', folder_name) 
 
         if not os.path.isdir(certificate_output_path):
             os.makedirs(certificate_output_path)
