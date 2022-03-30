@@ -20,6 +20,11 @@ class Sender:
         data_templates = self.get_data_templates() 
         print(data_templates)
 
+    def get_data_templates_folders(self):
+        data_templates = os.listdir('data')
+        data_templates = list(filter(lambda x: x[0]!='.', data_templates))
+        return data_templates
+
 #     def setup_certificate_folders(self):
 #         for folder_name in os.listdir('data'):
 #             data_path = os.path.join('data', folder_name)
