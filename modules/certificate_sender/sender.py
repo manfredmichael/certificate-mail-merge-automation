@@ -20,6 +20,15 @@ class Sender:
         data_templates = self.get_data_templates() 
         print(data_templates)
 
+    def get_data_templates(self):
+        template_folders = self.get_data_templates_folders()
+        data_templates = {}
+        for folder_name in template_folders:
+            data_templates[folder_name] = self.get_data_template_components(folder_name)
+        return data_templates
+            
+
+
     def get_data_templates_folders(self):
         data_templates = os.listdir('data')
         data_templates = list(filter(lambda x: x[0]!='.', data_templates))
