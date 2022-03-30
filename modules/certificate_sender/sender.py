@@ -16,10 +16,17 @@ class Sender:
         pass
         self.api = GoogleAPI(folder_id=folder_id,
                 client_secret_path=client_secret_path)
+        self.data_templates = self.get_data_templates() 
+        
+    def send_all(self):
+        for folder_name, data_template in self.data_templates.items():
+            self.send(folder_name, data_template)
+
+    def send(self):
+        print('help ma hed explod')
 
     def generate_all(self):
-        data_templates = self.get_data_templates() 
-        for folder_name, data_template in data_templates.items():
+        for folder_name, data_template in self.data_templates.items():
             self.generate(folder_name, data_template)
 
     def generate(self, folder_name, data_template):
