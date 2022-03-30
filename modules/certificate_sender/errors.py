@@ -10,7 +10,7 @@ class RequiredComponentNotExist(Exception):
     def __init__(self, folder, component, message=None):
         self.message = message
         if message is None:
-            self.message = f"Required component in {folder} does not exist: {component}" super().__init__(self.message)
+            self.message = f"Required component in {folder} does not exist: {component}"
         super().__init__(self.message)
 
 class DuplicateComponent(Exception):
@@ -25,5 +25,5 @@ class DuplicateComponent(Exception):
     def __init__(self, folder, component, message=None):
         self.message = message
         if message is None:
-            self.message = f"There are more than one component in {folder} does not exist: {component}"
+            self.message = f"There are more than one of the following component in {folder}: {component}"
         super().__init__(self.message)
