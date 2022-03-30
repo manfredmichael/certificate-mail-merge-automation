@@ -66,7 +66,7 @@ class GoogleAPI:
                 self.gmail_logger.add_log(email)
                 print(Fore.GREEN + 'Succesful!' + Style.RESET_ALL)
             except Exception as e:
-                print(Fore.RED + e + Style.RESET_ALL)
+                print(Fore.RED + str(e) + Style.RESET_ALL)
             finally:
                 self.gmail_logger.save_log()
 

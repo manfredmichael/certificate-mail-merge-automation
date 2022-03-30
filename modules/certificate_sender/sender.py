@@ -22,8 +22,32 @@ class Sender:
         for folder_name, data_template in self.data_templates.items():
             self.send(folder_name, data_template)
 
-    def send(self):
-        print('help ma hed explod')
+    def send(self, folder_name, data_template):
+        self.api.set_gmaiL_logger(folder_name)
+
+        data_path = os.path.join('data', folder_name) 
+        certificate_output_path = os.path.join('certificates', folder_name) 
+
+        subject, content = self.parse_message(os.path.join(data_path, data_template['message']))
+
+        # Load recipients data
+        recipients = pd.read_csv(os.path.join(data_path, data_template['recipient']))
+
+        for i, row in recipients.iterrows():
+            certificate_path = os.path.join(certificate_output_path, row['Name'].upper() + '.pdf')
+            self.api.send_certificate(row['Email'], subject, content.replace('[NAME]', row['Name'].strip()), certificate_path)
+    
+    def parse_message(self, filepath):
+        message = open(filepath).readlines()
+        subject = list(filter(lambda x: x.split(':')[0] == 'SUBJECT', message))
+        content = list(filter(lambda x: x.split(':')[0] != 'SUBJECT', message))
+        if len(subject)==0:
+            subject = 'Certificate'
+        else:
+            subject = subject[0].replace('SUBJECT:', '').strip()
+
+        content = ''.join(content)
+        return subject, content 
 
     def generate_all(self):
         for folder_name, data_template in self.data_templates.items():
