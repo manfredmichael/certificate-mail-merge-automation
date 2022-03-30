@@ -21,6 +21,9 @@ class GoogleAPI:
         if mailmerge_log_name:
             self.gmail_logger = GmailLogger(mailmerge_log_name)    # To prevent sending email more than once
 
+    def set_gmaiL_logger(mailmerge_log_name):
+        self.gmail_logger = GmailLogger(mailmerge_log_name)    # To prevent sending email more than once
+
     def load_services(self, client_secret_path):
         self.service_drive = Create_Service(
             client_secret_path,
