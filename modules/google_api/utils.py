@@ -1,6 +1,6 @@
 from datetime import datetime
 
-def get_certificate_info(name, code, type, url,\
+def get_certificate_info(name, code,  url, type=None,\
     date_published=None, valid_until='Forever'):
     if not date_published:
         date_published = datetime.now().strftime('%d %B %Y')
