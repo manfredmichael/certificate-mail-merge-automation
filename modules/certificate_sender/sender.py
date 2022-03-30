@@ -49,6 +49,19 @@ class Sender:
         components = self.validate_components(folder_name, components)
         return components
 
+    def validate_components(self, folder_name, components):
+        for component_name, value in components.items():
+            if len(value) > 1:
+                raise errors.DuplicateComponent(folder_name, component_name) 
+            if len(value) == 0:
+                raise errors.RequiredComponentNotExist(folder_name, component_name) 
+
+        components = {
+            'recipient': components['recipient'][0],
+            'message': components['message'][0],
+            'certificate': components['certificate'][0],
+        }
+        return components
             
 
     def get_data_templates_folders(self):
