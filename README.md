@@ -8,7 +8,8 @@ In this project tree, the data/ directory is your main interest. This is where y
 
 1. Certificate Template (.pdf)
 2. List of Recipients (.csv)
-3. Certificate Code (.code) <- It's optional
+3. email_message.txt 
+4. Certificate Code (.code) <- It's optional
 
 ```
 •
