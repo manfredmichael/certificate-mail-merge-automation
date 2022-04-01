@@ -7,6 +7,7 @@ from modules.certificate_generator.generator import Generator
 from modules.certificate_generator.utils import create_code
 from modules.certificate_generator import utils
 from modules.certificate_sender import errors 
+from modules.certificate_sender.utils import remove_class
 import os
 
 from modules.google_api.google_api import GoogleAPI
@@ -33,19 +34,21 @@ class Sender:
 
         # Load recipients data
         recipients = pd.read_csv(os.path.join(data_path, data_template['recipient']))
+        recipients['Name'] = recipients['Name'].apply(remove_class)
 
         for i, row in recipients.iterrows():
             if i >=5 and confirm_mode:
-                self.confirm_to_continue()
+                confirm_mode = self.confirm_to_continue()
 
             certificate_path = os.path.join(certificate_output_path, row['Name'].upper() + '.pdf')
             self.api.send_certificate(row['Email'], subject, content.replace('[NAME]', row['Name'].strip()), certificate_path)
 
     def confirm_to_continue(self):
-        print(Fore.YELLOW+ 'Some emails have been sent. Before we continue, please confirm there was no any mistake (y/N):' + Style.RESET_ALL, end='')
+        print(Fore.YELLOW+ 'Some emails have been sent. Before we continue, please confirm there was not any mistake (y/N):' + Style.RESET_ALL, end='')
         confirm = input().lower() == 'y'
         if not confirm:
             exit()
+        return False    # return confirm_mode as false
     
     def parse_message(self, filepath):
         message = open(filepath).readlines()
@@ -82,6 +85,7 @@ class Sender:
 
         # Load recipients data
         recipients = pd.read_csv(os.path.join(data_path, data_template['recipient']))
+        recipients['Name'] = recipients['Name'].apply(remove_class)
 
         result_df = []
         for i, row in tqdm(recipients.iterrows(), total=len(recipients)):
