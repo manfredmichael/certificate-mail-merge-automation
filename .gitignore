@@ -1,7 +1,6 @@
 **/__pycache__
 env
 secrets/*
-templates/*
 imgs/*
 certificates/*
 data/*
@@ -9,7 +8,6 @@ logs/*
 
 !data/.gitkeep
 !secrets/.gitkeep
-!templates/.gitkeep
 !imgs/.gitkeep
 !certificates/.gitkeep
 !logs/.gitkeep
