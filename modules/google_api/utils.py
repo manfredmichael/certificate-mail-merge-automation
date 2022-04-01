@@ -14,6 +14,8 @@ def get_certificate_info(name, code,  url, type=None,\
             type = 'Completed'
         elif type_code == 'SP':
             type = 'Speaker'
+        elif type_code == 'AP':
+            type = 'Appreciation'
         else:
             type = 'Unknown'
     return [code, date_published, name, type, valid_until, url]
