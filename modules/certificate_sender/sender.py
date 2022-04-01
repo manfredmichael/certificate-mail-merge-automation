@@ -1,6 +1,7 @@
 import os
 from tqdm import tqdm
 import pandas as pd
+from colorama import Fore, Style
 
 from modules.certificate_generator.generator import Generator
 from modules.certificate_generator.utils import create_code
@@ -18,11 +19,11 @@ class Sender:
                 client_secret_path=client_secret_path)
         self.data_templates = self.get_data_templates() 
         
-    def send_all(self):
+    def send_all(self, confirm_mode=True):
         for folder_name, data_template in self.data_templates.items():
-            self.send(folder_name, data_template)
+            self.send(folder_name, data_template, confirm_mode)
 
-    def send(self, folder_name, data_template):
+    def send(self, folder_name, data_template, confirm_mode):
         self.api.set_gmaiL_logger(folder_name)
 
         data_path = os.path.join('data', folder_name) 
@@ -34,8 +35,17 @@ class Sender:
         recipients = pd.read_csv(os.path.join(data_path, data_template['recipient']))
 
         for i, row in recipients.iterrows():
+            if i >=5 and confirm_mode:
+                self.confirm_to_continue()
+
             certificate_path = os.path.join(certificate_output_path, row['Name'].upper() + '.pdf')
             self.api.send_certificate(row['Email'], subject, content.replace('[NAME]', row['Name'].strip()), certificate_path)
+
+    def confirm_to_continue(self):
+        print(Fore.YELLOW+ 'Some emails have been sent. Before we continue, please confirm there was no any mistake (y/N):' + Style.RESET_ALL, end='')
+        confirm = input().lower() == 'y'
+        if not confirm:
+            exit()
     
     def parse_message(self, filepath):
         message = open(filepath).readlines()
