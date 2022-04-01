@@ -4,6 +4,12 @@ Send your event certificates with 3 lines of code
 ![](./preview.png)
 
 ### Project Tree
+In this project tree, the data/ directory is your main interest. This is where you put:
+
+1. Certificate Template (.pdf)
+2. List of Recipients (.csv)
+3. Certificate Code (.code) <- It's optional
+
 ```
 •
 ├── data/
@@ -24,7 +30,8 @@ Send your event certificates with 3 lines of code
 └── main.py
 ```
 
-A typical project tree
+
+A typical project tree with required data would look like this.
 
 ```
 •
