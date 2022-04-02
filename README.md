@@ -73,3 +73,23 @@ Manfred Michael, manfredmichael2030@gmail.com
 Michael Corleone, michaelandolini@example.com
 GDSC Gunadarma University, dscgunadarma@example.com
 ```
+
+
+#### 3. email_message.txt 
+Put your email message in a simple txt file. You can put the subject with `SUBJECT:` prefix on the first line, but this is optional. You can put `[NAME]` keyword to be replaced by recipient's own name.
+
+```
+SUBJECT: Your Weekly Class UI/UX 2022 Participation
+Hello, [NAME]!
+
+Thank you so much for becoming a part of our first UI & UX Weekly Class. We hope that this event has helped you in your own UI/UX journey and greatly magnified your passion in this field. We are truly looking forward to see you on our next event. Until then, we are sending our appreciation your way through this certificate.
+
+Best regards,
+GDSC UG
+Together We Grow <>
+
+Contact Us!
+Instagram: https://www.instagram.com/gdscug/
+Discord: https://dscug.club/discord
+Email: dscgunadarma@gmail.com
+```
