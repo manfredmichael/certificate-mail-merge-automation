@@ -62,3 +62,14 @@ A typical project tree with required data would look like this.
 
 #### 1. Certificate Template (.pdf)
 You can choose whether to use pdf/png file as certificate template.
+
+#### 2. List of Recipients (.csv)
+Put your recipients data in a csv file with `Email` and `Name` column.
+
+```
+Name,Email
+Muhammad Fadhiil F, fadhil@example.com
+Manfred Michael, manfredmichael2030@gmail.com
+Michael Corleone, michaelandolini@example.com
+GDSC Gunadarma University, dscgunadarma@example.com
+```
