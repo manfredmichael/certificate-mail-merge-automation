@@ -57,3 +57,8 @@ A typical project tree with required data would look like this.
 │   └── google_api/templates/
 └── main.py
 ```
+
+### Setting up Certificate Data
+
+#### 1. Certificate Template (.pdf)
+You can choose whether to use pdf/png file as certificate template.
