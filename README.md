@@ -93,3 +93,16 @@ Instagram: https://www.instagram.com/gdscug/
 Discord: https://dscug.club/discord
 Email: dscgunadarma@gmail.com
 ```
+
+#### 4. Certificate Code (.code)
+Remember that this is optional. You can put the base certificate code in the file name such as `<CERTIFICATE_CODE>.code`. 2 digits will be added at the end as the certificate number.
+
+Ex: WYUX260322PT.code
+```
+WYUX260322PT01
+WYUX260322PT02
+WYUX260322PT03
+WYUX260322PT04
+...
+```
+
